@@ -8,6 +8,10 @@
     "apps/*",
     "packages/*"
   ],
+  "engines": {
+    "node": "14",
+    "npm": "7"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -25,5 +29,58 @@
   "bugs": {
     "url": "https://github.com/mysterycommand/roundtable/issues"
   },
-  "homepage": "https://github.com/mysterycommand/roundtable#readme"
+  "homepage": "https://github.com/mysterycommand/roundtable#readme",
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "4.15.0",
+    "@typescript-eslint/parser": "4.15.0",
+    "eslint": "7.19.0",
+    "husky": "5.0.9",
+    "lint-staged": "10.5.4",
+    "prettier": "2.2.1",
+    "typescript": "4.1.5"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run lint-staged"
+    }
+  },
+  "lint-staged": {
+    "**/*.{json,md,ts,tsx}": "prettier --write",
+    "{apps,packages}/**/*.ts": "eslint --fix --max-warnings 0"
+  },
+  "prettier": {
+    "singleQuote": true,
+    "trailingComma": "all",
+    "overrides": [
+      {
+        "files": [
+          ".eslintrc.json",
+          "tsconfig.json"
+        ],
+        "options": {
+          "parser": "json-stringify"
+        }
+      }
+    ]
+  },
+  "eslintConfig": {
+    "root": true,
+    "parser": "@typescript-eslint/parser",
+    "plugins": [
+      "@typescript-eslint"
+    ],
+    "extends": [
+      "eslint:recommended",
+      "plugin:@typescript-eslint/eslint-recommended",
+      "plugin:@typescript-eslint/recommended"
+    ],
+    "env": {
+      "browser": true,
+      "node": true
+    },
+    "rules": {
+      "@typescript-eslint/ban-ts-comment": "off"
+    }
+  },
+  "eslintIgnore": []
 }
