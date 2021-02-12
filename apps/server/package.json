@@ -1,5 +1,5 @@
 {
-  "name": "@roundtable/server",
+  "name": "@rnd/server",
   "version": "1.0.0",
   "description": "An experimental WebRTC server",
   "private": true,
