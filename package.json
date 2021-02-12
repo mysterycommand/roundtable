@@ -2,7 +2,12 @@
   "name": "roundtable",
   "version": "1.0.0",
   "description": "An experimental WebRTC monorepo",
-  "main": "index.js",
+  "private": true,
+  "type": "module",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -10,9 +15,13 @@
     "type": "git",
     "url": "git+https://github.com/mysterycommand/roundtable.git"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "keywords": [
+    "experimental",
+    "webrtc",
+    "monorepo"
+  ],
+  "author": "Matt Hayes <matt@mysterycommand.com>",
+  "license": "MITs",
   "bugs": {
     "url": "https://github.com/mysterycommand/roundtable/issues"
   },
