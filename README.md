@@ -1,6 +1,6 @@
 # Roundtable
 
-> An experimental WebRTC monorepo, namespaced under `@rnd` (for "research 'n' development" but also an abbreviation of "round" but also an abbreviation of "random")<br />
+> An experimental WebRTC monorepo, namespaced under `@rnd` (for "research'n'development" **but** also an abbreviation of "round" **_and_** also an abbreviation of "random")<br />
 > by [Matt Hayes](https://mysterycommand.com)
 
 #### Notes
