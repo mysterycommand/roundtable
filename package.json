@@ -1,5 +1,5 @@
 {
-  "name": "roundtable",
+  "name": "@roundtable/monorepo",
   "version": "1.0.0",
   "description": "An experimental WebRTC monorepo",
   "private": true,
