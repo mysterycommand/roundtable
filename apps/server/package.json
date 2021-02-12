@@ -1,0 +1,25 @@
+{
+  "name": "@roundtable/server",
+  "version": "1.0.0",
+  "description": "An experimental WebRTC server",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mysterycommand/roundtable.git"
+  },
+  "keywords": [
+    "experimental",
+    "webrtc",
+    "server"
+  ],
+  "author": "Matt Hayes <matt@mysterycommand.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/mysterycommand/roundtable/issues"
+  },
+  "homepage": "https://github.com/mysterycommand/roundtable#readme"
+}
