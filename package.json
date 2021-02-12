@@ -13,6 +13,7 @@
     "npm": "7"
   },
   "scripts": {
+    "postinstall": "lerna bootsrap",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -35,6 +36,7 @@
     "@typescript-eslint/parser": "4.15.0",
     "eslint": "7.19.0",
     "husky": "5.0.9",
+    "lerna": "^3.22.1",
     "lint-staged": "10.5.4",
     "prettier": "2.2.1",
     "typescript": "4.1.5"
