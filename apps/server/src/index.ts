@@ -1,16 +1,18 @@
 import { createServer } from 'http';
 
-import { Evt } from 'evt';
-import WebSocket from 'ws';
+import evt from 'evt';
+import ws from 'ws';
 
-import { createPeerConnection } from './lib/createPeerConnection';
-import { createSocketServer } from './lib/createSocketServer';
+import { createPeerConnection } from './lib/createPeerConnection.js';
+import { createSocketServer } from './lib/createSocketServer.js';
+
+const { Evt } = evt;
 
 const server = createServer();
 const socketServer = createSocketServer({ server });
-const connections: Map<WebSocket, RTCPeerConnection> = new Map();
+const connections: Map<ws, RTCPeerConnection> = new Map();
 
-Evt.from<WebSocket>(socketServer, 'connection').attach((socket) => {
+Evt.from<ws>(socketServer, 'connection').attach((socket) => {
   connections.set(socket, createPeerConnection());
   console.log(connections);
 });

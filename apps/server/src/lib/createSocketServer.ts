@@ -1,6 +1,6 @@
-import { Server, ServerOptions } from 'ws';
+import ws from 'ws';
 
 export const createSocketServer = (
-  options?: ServerOptions,
+  options?: ws.ServerOptions,
   callback?: () => void,
-): Server => new Server(options, callback);
+): ws.Server => new ws.Server(options, callback);

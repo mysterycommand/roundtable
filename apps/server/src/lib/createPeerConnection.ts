@@ -1,4 +1,4 @@
-import { RTCPeerConnection } from 'wrtc';
+import wrtc from 'wrtc';
 
 const defaultConfiguration: RTCConfiguration = {
   iceServers: [
@@ -14,7 +14,7 @@ const defaultConfiguration: RTCConfiguration = {
 export const createPeerConnection = (
   configuration?: RTCConfiguration,
 ): RTCPeerConnection =>
-  new RTCPeerConnection({
+  new wrtc.RTCPeerConnection({
     ...defaultConfiguration,
     ...configuration,
   });
