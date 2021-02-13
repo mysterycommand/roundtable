@@ -5,6 +5,8 @@
 
 #### Notes
 
+---
+
 ~~You may need to run `npm install --global node-pre-gyp` (or `npm i -g node-pre-gyp`) before running `npm i` here, the `wrtc` package seems to have an issue with `npm@7` (which this repo uses).~~
 
 ```
@@ -15,3 +17,5 @@
 ##### Update
 
 Looks like this isn't necessary under Node v14.15.5 and npm v7.5.4. I've updated the engines field in the root pakage.json to reflect that.
+
+---
