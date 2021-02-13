@@ -7,7 +7,8 @@
     "allowSyntheticDefaultImports": true,
     "isolatedModules": true,
     "resolveJsonModule": true,
-    "noEmit": true,
-    "strict": true
+    "strict": true,
+    "sourceMap": true,
+    "declaration": true
   }
 }
