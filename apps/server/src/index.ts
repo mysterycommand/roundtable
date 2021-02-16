@@ -20,10 +20,11 @@ const staticServer = createStaticServer(resolve(__dirname, '../public'));
 
 const server = createServer((req, res) => {
   staticServer.serve(req, res, (err) => {
-    console.log(req.url, err);
     if (!err) {
       return;
     }
+
+    console.log(req.url, err);
 
     /**
      * n.b. the `Callback` is mis-typed in `@types/node-static`
