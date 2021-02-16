@@ -14,9 +14,9 @@
   },
   "scripts": {
     "postinstall": "lerna bootstrap",
-    "server:watch": "lerna run watch --scope @rnd/server --stream",
-    "server:dev": "nodemon apps/server/dist/index.js",
-    "dev": "concurrently \"npm:server:*\"",
+    "dev:build-server": "lerna run watch --scope @rnd/server --stream",
+    "dev:start-server": "nodemon apps/server/dist/index.js",
+    "dev": "concurrently \"npm:dev:*\"",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

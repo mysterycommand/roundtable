@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "build": "tsc --build",
-    "watch": "npm run build -- --watch",
+    "watch": "tsc --build --watch",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
