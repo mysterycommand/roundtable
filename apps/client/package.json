@@ -5,8 +5,8 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "esbuild src/index.ts --bundle --define:process.env.NODE_ENV=\\\"production\\\"",
-    "serve": "esbuild src/index.ts --serve --bundle --define:process.env.NODE_ENV=\\\"development\\\"",
+    "build": "esbuild src/index.ts --bundle --outdir=dist --define:process.env.NODE_ENV=\\\"production\\\"",
+    "serve": "esbuild src/index.ts --bundle --serve --define:process.env.NODE_ENV=\\\"development\\\"",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
