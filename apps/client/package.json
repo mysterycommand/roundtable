@@ -21,10 +21,5 @@
   "bugs": {
     "url": "https://github.com/mysterycommand/roundtable/issues"
   },
-  "homepage": "https://github.com/mysterycommand/roundtable#readme",
-  "dependencies": {
-    "next": "10.0.6",
-    "react": "17.0.1",
-    "react-dom": "17.0.1"
-  }
+  "homepage": "https://github.com/mysterycommand/roundtable#readme"
 }
