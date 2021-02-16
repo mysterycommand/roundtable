@@ -1,5 +1,4 @@
-import evt from 'evt';
-const { Evt } = evt;
+import { Evt } from 'evt';
 
 Evt.from<Event>(window, 'resize').attach(() => {
   const { innerWidth, innerHeight } = window;
