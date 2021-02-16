@@ -5,6 +5,8 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "build": "esbuild src/index.ts --bundle --define:process.env.NODE_ENV=\\\"production\\\"",
+    "serve": "esbuild src/index.ts --serve --bundle --define:process.env.NODE_ENV=\\\"development\\\"",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -21,5 +23,8 @@
   "bugs": {
     "url": "https://github.com/mysterycommand/roundtable/issues"
   },
-  "homepage": "https://github.com/mysterycommand/roundtable#readme"
+  "homepage": "https://github.com/mysterycommand/roundtable#readme",
+  "dependencies": {
+    "evt": "1.9.12"
+  }
 }
