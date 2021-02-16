@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "build": "tsc --build",
-    "watch": "tsc --build --watch",
+    "watch": "tsc --build --watch --preserveWatchOutput",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -26,11 +26,13 @@
   "homepage": "https://github.com/mysterycommand/roundtable#readme",
   "dependencies": {
     "evt": "1.9.12",
+    "http-proxy": "1.18.1",
     "node-static": "0.7.11",
     "wrtc": "0.4.7",
     "ws": "7.4.3"
   },
   "devDependencies": {
+    "@types/http-proxy": "1.17.5",
     "@types/node-static": "0.7.6",
     "@types/ws": "7.4.0"
   }
