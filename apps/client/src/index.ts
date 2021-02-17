@@ -3,6 +3,11 @@ import evt from 'evt';
 import { el } from './lib/helpers.js';
 
 const { Evt } = evt;
+const {
+  devicePixelRatio: dpr,
+  // requestAnimationFrame: raf,
+  // cancelAnimationFrame: caf,
+} = window;
 
 const canvas = el<HTMLCanvasElement>('canvas');
 if (!canvas) {
@@ -15,14 +20,14 @@ if (!context) {
 }
 
 Evt.from<Event>(window, 'resize').attach(() => {
-  const { innerWidth, innerHeight, devicePixelRatio } = window;
+  const { innerWidth, innerHeight } = window;
 
-  canvas.width = innerWidth * devicePixelRatio;
-  canvas.height = innerHeight * devicePixelRatio;
+  canvas.width = innerWidth * dpr;
+  canvas.height = innerHeight * dpr;
 
   canvas.style.width = `${canvas.width}px`;
   canvas.style.height = `${canvas.height}px`;
-  canvas.style.transform = `scale(${1 / devicePixelRatio})`;
+  canvas.style.transform = `scale(${1 / dpr})`;
 });
 
 window.dispatchEvent(new Event('resize'));
