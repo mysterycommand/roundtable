@@ -21,3 +21,20 @@ export const isClosed = (ws: WebSocket): boolean =>
 
 export const el = <E extends Element = Element>(selectors: string): E | null =>
   document.querySelector(selectors);
+
+const defaultConfiguration: RTCConfiguration = {
+  iceServers: [
+    {
+      urls: [
+        'stun:stun.l.google.com:19302',
+        'stun:global.stun.twilio.com:3478',
+      ],
+    },
+  ],
+};
+
+export const rtcp = (configuration?: RTCConfiguration): RTCPeerConnection =>
+  new RTCPeerConnection({
+    ...defaultConfiguration,
+    ...configuration,
+  });

@@ -1,6 +1,6 @@
 import evt from 'evt';
 
-import { el } from './lib/helpers.js';
+import { el, rtcp, ws } from './lib/helpers.js';
 
 const { Evt } = evt;
 const {
@@ -18,6 +18,10 @@ const context = canvas?.getContext('2d');
 if (!context) {
   throw new Error('Expected a CanvasRenderingContext2D, but found none');
 }
+
+const socket = ws('ws://localhost:8080');
+const connection = rtcp();
+const channel = connection.createDataChannel('@rnd/state');
 
 Evt.from<Event>(window, 'resize').attach(() => {
   const { innerWidth, innerHeight } = window;
