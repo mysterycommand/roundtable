@@ -189,3 +189,23 @@ Evt.from<PointerEvent>(canvas, 'pointerdown').attach(() => {
 Evt.from<PointerEvent>(canvas, 'pointerup').attach(() => {
   moveCtx.done();
 });
+
+const frameEvt = Evt.create<DOMHighResTimeStamp>();
+const frame = (t: DOMHighResTimeStamp) => {
+  raf(frame);
+  frameEvt.post(t);
+};
+raf(frame);
+frameEvt.attach((/* t */) => {
+  // console.log(t);
+});
+
+/**
+ * drawing
+ */
+// context.clearRect(0, 0, canvas.width, canvas.height);
+// context.fillStyle = `hsl(${hue}, 80%, 50%)`;
+// const r = 10 + Math.sin(Date.now()) * 10;
+// context.beginPath();
+// context.ellipse(x, y, r, r, 0, 0, Math.PI * 2);
+// context.fill();
