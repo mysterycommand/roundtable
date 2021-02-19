@@ -37,8 +37,13 @@ Evt.from<WebSocket>(socketServer, 'connection').attach((socket) => {
       Evt.from<MessageEvent<string>>(channel, 'message').attach(({ data }) => {
         const parsedData = JSON.parse(data);
 
-        channels.forEach((peerChannel) => {
-          peerChannel.send(
+        channels.forEach((clientChannel /* , clientSocket */) => {
+          // // only broadcast to "other" clients
+          // if (clientSocket === socket) {
+          //   return;
+          // }
+
+          clientChannel.send(
             JSON.stringify({
               clientId,
               ...parsedData,
