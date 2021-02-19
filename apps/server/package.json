@@ -26,10 +26,12 @@
   "homepage": "https://github.com/mysterycommand/roundtable#readme",
   "dependencies": {
     "evt": "1.9.12",
+    "uuid": "8.3.2",
     "wrtc": "0.4.7",
     "ws": "7.4.3"
   },
   "devDependencies": {
+    "@types/uuid": "8.3.0",
     "@types/ws": "7.4.0"
   }
 }
