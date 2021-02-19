@@ -19,6 +19,12 @@ export const isClosing = (ws: WebSocket): boolean =>
 export const isClosed = (ws: WebSocket): boolean =>
   ws.readyState === WebSocket.CLOSED;
 
+export const isReady = async (ws: WebSocket): Promise<true> =>
+  isOpen(ws) ||
+  new Promise((resolve) => {
+    ws.addEventListener('open', () => resolve(true), { once: true });
+  });
+
 export const el = <E extends Element = Element>(selectors: string): E | null =>
   document.querySelector(selectors);
 

@@ -1,6 +1,6 @@
 import evt from 'evt';
 
-import { el, isOpen, rtcp, ws } from './lib/helpers.js';
+import { el, isReady, rtcp, ws } from './lib/helpers.js';
 
 /**
  * @see https://github.com/microsoft/TypeScript-DOM-lib-generator/pull/966
@@ -31,12 +31,6 @@ if (!context) {
 const socket = ws('ws://localhost:8080');
 const connection = rtcp();
 const channel = connection.createDataChannel('@rnd/state');
-
-const isReady = async (socket: WebSocket): Promise<true> =>
-  isOpen(socket) ||
-  new Promise((resolve) => {
-    Evt.from<Event>(socket, 'open').attachOnce(() => resolve(true));
-  });
 
 Evt.merge([
   Evt.from<Event>(connection, 'connectionstatechange'),
