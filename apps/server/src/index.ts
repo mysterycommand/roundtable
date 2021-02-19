@@ -41,6 +41,7 @@ Evt.from<ws>(socketServer, 'connection').attach((socket) => {
       });
 
       Evt.from<MessageEvent<string>>(channel, 'message').attach(({ data }) => {
+        console.log({ data });
         channels.forEach((peerChannel, peerSocket) => {
           if (peerSocket === socket) {
             return;
