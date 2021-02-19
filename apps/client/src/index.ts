@@ -32,6 +32,13 @@ const socket = ws('ws://localhost:8080');
 const connection = rtcp();
 const channel = connection.createDataChannel('@rnd/state');
 
+const isMessageEvent = (
+  event: Event | RTCErrorEvent | MessageEvent,
+): event is MessageEvent => event.type === 'message';
+
+/**
+ * Connection Logging
+ */
 Evt.merge([
   Evt.from<Event>(connection, 'connectionstatechange'),
   Evt.from<Event>(connection, 'signalingstatechange'),
@@ -40,10 +47,9 @@ Evt.merge([
   console.log('connection.signalingState', connection.signalingState);
 });
 
-const isMessageEvent = (
-  event: Event | RTCErrorEvent | MessageEvent,
-): event is MessageEvent => event.type === 'message';
-
+/**
+ * Data Channel Logging
+ */
 Evt.merge([
   Evt.from<Event>(channel, 'open'),
   Evt.from<Event>(channel, 'close'),
@@ -109,6 +115,9 @@ Evt.from<MessageEvent<string>>(socket, 'message').attach(async ({ data }) => {
   }
 });
 
+/**
+ * Window Resizing
+ */
 Evt.from<Event>(window, 'resize').attach(() => {
   const { innerWidth, innerHeight } = window;
 
