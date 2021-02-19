@@ -122,59 +122,12 @@ Evt.from<Event>(window, 'resize').attach(() => {
 
 window.dispatchEvent(new Event('resize'));
 
+/**
+ * Pointer Events
+ */
 const moveCtx = Evt.newCtx();
 const moveEvt = Evt.from<PointerEvent>(canvas, 'pointermove');
 
-/**
- * interface Event {
- *   readonly bubbles: boolean;
- *   readonly cancelable: boolean;
- *   readonly composed: boolean;
- *   readonly defaultPrevented: boolean;
- *   readonly eventPhase: number;
- *   readonly isTrusted: boolean;
- *   readonly timeStamp: number;
- *   readonly type: string;
- * }
- *
- * interface UIEvent extends Event {
- *   readonly detail: number;
- * }
- *
- * interface MouseEvent extends UIEvent {
- *   readonly altKey: boolean;
- *   readonly button: number;
- *   readonly buttons: number;
- *   readonly clientX: number;
- *   readonly clientY: number;
- *   readonly ctrlKey: boolean;
- *   readonly metaKey: boolean;
- *   readonly movementX: number;
- *   readonly movementY: number;
- *   readonly offsetX: number;
- *   readonly offsetY: number;
- *   readonly pageX: number;
- *   readonly pageY: number;
- *   readonly screenX: number;
- *   readonly screenY: number;
- *   readonly shiftKey: boolean;
- *   readonly x: number;
- *   readonly y: number;
- * }
- *
- * interface PointerEvent extends MouseEvent {
- *   readonly height: number;
- *   readonly isPrimary: boolean;
- *   readonly pointerId: number;
- *   readonly pointerType: string;
- *   readonly pressure: number;
- *   readonly tangentialPressure: number;
- *   readonly tiltX: number;
- *   readonly tiltY: number;
- *   readonly twist: number;
- *   readonly width: number;
- * }
- */
 Evt.from<PointerEvent>(canvas, 'pointerdown').attach(() => {
   moveEvt.attach(
     moveCtx,
@@ -190,13 +143,19 @@ Evt.from<PointerEvent>(canvas, 'pointerup').attach(() => {
   moveCtx.done();
 });
 
+/**
+ * Animation Frames
+ */
+const frameCtx = Evt.newCtx();
 const frameEvt = Evt.create<DOMHighResTimeStamp>();
+
 const frame = (t: DOMHighResTimeStamp) => {
   raf(frame);
   frameEvt.post(t);
 };
 raf(frame);
-frameEvt.attach((/* t */) => {
+
+frameEvt.attach(frameCtx, (/* t */) => {
   // console.log(t);
 });
 
