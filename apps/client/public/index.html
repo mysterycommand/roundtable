@@ -29,6 +29,14 @@
         display: flex;
         align-items: center;
         justify-content: center;
+
+        /* prevent "touch drag/scroll" and "longpress select" behavior */
+        position: fixed;
+        touch-action: none;
+        user-select: none;
+
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
       }
 
       canvas {
