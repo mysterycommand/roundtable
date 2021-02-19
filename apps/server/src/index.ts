@@ -1,7 +1,7 @@
 import { createServer } from 'http';
 
 import evt from 'evt';
-import ws from 'ws';
+import WebSocket from 'ws';
 
 /**
  * need the `*.js` extension here
@@ -14,16 +14,11 @@ const { Evt } = evt;
 
 const server = createServer();
 const socketServer = createSocketServer({ server });
-const channels: Map<ws, RTCDataChannel> = new Map();
+const channels: Map<WebSocket, RTCDataChannel> = new Map();
 
-Evt.from<ws>(socketServer, 'connection').attach((socket) => {
+Evt.from<WebSocket>(socketServer, 'connection').attach((socket) => {
   // TODO: do something with `Evt.newCtx()`
   const connection = createPeerConnection();
-
-  Evt.from<ws.CloseEvent>(socket, 'close').attachOnce(() => {
-    connection.close();
-    channels.delete(socket);
-  });
 
   Evt.from<RTCDataChannelEvent>(connection, 'datachannel').attach(
     ({ channel }) => {
@@ -34,8 +29,6 @@ Evt.from<ws>(socketServer, 'connection').attach((socket) => {
         Evt.from<RTCErrorEvent>(channel, 'error'),
       ]).attach(() => {
         socket.close();
-
-        // TODO: this might not be necessary?
         connection.close();
         channels.delete(socket);
       });
@@ -65,7 +58,7 @@ Evt.from<ws>(socketServer, 'connection').attach((socket) => {
   /**
    * @see https://developer.mozilla.org/en-US/docs/Web/API/WebRTC_API/Perfect_negotiation#Handling_incoming_messages_on_the_signaling_channel
    */
-  Evt.from<ws.MessageEvent>(socket, 'message').attach(async (data) => {
+  Evt.from<WebSocket.MessageEvent>(socket, 'message').attach(async (data) => {
     if (typeof data !== 'string' || data === 'null') {
       return;
     }
