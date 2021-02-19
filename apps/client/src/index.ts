@@ -74,6 +74,7 @@ Evt.merge([
 Evt.from<Event>(connection, 'negotiationneeded').attach(async () => {
   try {
     await connection.setLocalDescription();
+    socket.send(JSON.stringify({ description: connection.localDescription }));
   } catch (error) {
     console.error(error);
   }
