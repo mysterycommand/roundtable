@@ -50,18 +50,21 @@ Evt.from<WebSocket>(socketServer, 'connection').attach((socket) => {
   );
 
   /**
-   * @see https://developer.mozilla.org/en-US/docs/Web/API/WebRTC_API/Perfect_negotiation#Handling_incoming_ICE_candidates
+   * Perfect Negotiation
    */
   Evt.from<RTCPeerConnectionIceEvent>(connection, 'icecandidate').attach(
+    /**
+     * @see https://developer.mozilla.org/en-US/docs/Web/API/WebRTC_API/Perfect_negotiation#Handling_incoming_ICE_candidates
+     */
     ({ candidate }) => {
       socket.send(JSON.stringify({ candidate }));
     },
   );
 
-  /**
-   * @see https://developer.mozilla.org/en-US/docs/Web/API/WebRTC_API/Perfect_negotiation#Handling_incoming_messages_on_the_signaling_channel
-   */
   Evt.from<WebSocket.MessageEvent>(socket, 'message').attach(async (data) => {
+    /**
+     * @see https://developer.mozilla.org/en-US/docs/Web/API/WebRTC_API/Perfect_negotiation#Handling_incoming_messages_on_the_signaling_channel
+     */
     if (typeof data !== 'string' || data === 'null') {
       return;
     }

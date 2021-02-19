@@ -75,9 +75,12 @@ Evt.merge([
 });
 
 /**
- * @see https://developer.mozilla.org/en-US/docs/Web/API/WebRTC_API/Perfect_negotiation#Handling_the_negotiationneeded_event
+ * Perfect Negotiation
  */
 Evt.from<Event>(connection, 'negotiationneeded').attach(async () => {
+  /**
+   * @see https://developer.mozilla.org/en-US/docs/Web/API/WebRTC_API/Perfect_negotiation#Handling_the_negotiationneeded_event
+   */
   try {
     await connection.setLocalDescription();
     await isReady(socket);
@@ -87,20 +90,20 @@ Evt.from<Event>(connection, 'negotiationneeded').attach(async () => {
   }
 });
 
-/**
- * @see https://developer.mozilla.org/en-US/docs/Web/API/WebRTC_API/Perfect_negotiation#Handling_incoming_ICE_candidates
- */
 Evt.from<RTCPeerConnectionIceEvent>(connection, 'icecandidate').attach(
+  /**
+   * @see https://developer.mozilla.org/en-US/docs/Web/API/WebRTC_API/Perfect_negotiation#Handling_incoming_ICE_candidates
+   */
   async ({ candidate }) => {
     await isReady(socket);
     socket.send(JSON.stringify({ candidate }));
   },
 );
 
-/**
- * @see https://developer.mozilla.org/en-US/docs/Web/API/WebRTC_API/Perfect_negotiation#Handling_incoming_messages_on_the_signaling_channel
- */
 Evt.from<MessageEvent<string>>(socket, 'message').attach(async ({ data }) => {
+  /**
+   * @see https://developer.mozilla.org/en-US/docs/Web/API/WebRTC_API/Perfect_negotiation#Handling_incoming_messages_on_the_signaling_channel
+   */
   const { candidate, description } = JSON.parse(data);
   console.log({ candidate, description });
 
