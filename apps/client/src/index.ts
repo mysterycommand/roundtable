@@ -1,6 +1,6 @@
 import evt from 'evt';
 
-import { el, rtcp, ws } from './lib/helpers.js';
+import { el, isOpen, rtcp, ws } from './lib/helpers.js';
 
 /**
  * @see https://github.com/microsoft/TypeScript-DOM-lib-generator/pull/966
@@ -23,7 +23,7 @@ if (!canvas) {
   throw new Error('Expected an HTMLCanvasElement, but found none');
 }
 
-const context = canvas?.getContext('2d');
+const context = canvas.getContext('2d');
 if (!context) {
   throw new Error('Expected a CanvasRenderingContext2D, but found none');
 }
@@ -31,6 +31,12 @@ if (!context) {
 const socket = ws('ws://localhost:8080');
 const connection = rtcp();
 const channel = connection.createDataChannel('@rnd/state');
+
+const isReady = async (socket: WebSocket): Promise<true> =>
+  isOpen(socket) ||
+  new Promise((resolve) => {
+    Evt.from<Event>(socket, 'open').attachOnce(() => resolve(true));
+  });
 
 Evt.merge([
   Evt.from<Event>(connection, 'connectionstatechange'),
@@ -74,6 +80,7 @@ Evt.merge([
 Evt.from<Event>(connection, 'negotiationneeded').attach(async () => {
   try {
     await connection.setLocalDescription();
+    await isReady(socket);
     socket.send(JSON.stringify({ description: connection.localDescription }));
   } catch (error) {
     console.error(error);
@@ -84,7 +91,8 @@ Evt.from<Event>(connection, 'negotiationneeded').attach(async () => {
  * @see https://developer.mozilla.org/en-US/docs/Web/API/WebRTC_API/Perfect_negotiation#Handling_incoming_ICE_candidates
  */
 Evt.from<RTCPeerConnectionIceEvent>(connection, 'icecandidate').attach(
-  ({ candidate }) => {
+  async ({ candidate }) => {
+    await isReady(socket);
     socket.send(JSON.stringify({ candidate }));
   },
 );
