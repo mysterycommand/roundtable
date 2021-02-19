@@ -19,6 +19,7 @@ const channels: Map<WebSocket, RTCDataChannel> = new Map();
 
 Evt.from<WebSocket>(socketServer, 'connection').attach((socket) => {
   const clientId = uuid();
+  const hue = Math.floor(Math.random() * 360);
   const connection = createPeerConnection();
 
   Evt.from<RTCDataChannelEvent>(connection, 'datachannel').attach(
@@ -46,6 +47,7 @@ Evt.from<WebSocket>(socketServer, 'connection').attach((socket) => {
           clientChannel.send(
             JSON.stringify({
               clientId,
+              hue,
               ...parsedData,
             }),
           );
