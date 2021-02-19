@@ -1,6 +1,7 @@
 import { createServer } from 'http';
 
 import evt from 'evt';
+import { v4 as uuid } from 'uuid';
 import WebSocket from 'ws';
 
 /**
@@ -17,7 +18,7 @@ const socketServer = createSocketServer({ server });
 const channels: Map<WebSocket, RTCDataChannel> = new Map();
 
 Evt.from<WebSocket>(socketServer, 'connection').attach((socket) => {
-  // TODO: do something with `Evt.newCtx()`
+  const clientId = uuid();
   const connection = createPeerConnection();
 
   Evt.from<RTCDataChannelEvent>(connection, 'datachannel').attach(
@@ -34,13 +35,15 @@ Evt.from<WebSocket>(socketServer, 'connection').attach((socket) => {
       });
 
       Evt.from<MessageEvent<string>>(channel, 'message').attach(({ data }) => {
-        console.log({ data });
-        channels.forEach((peerChannel, peerSocket) => {
-          if (peerSocket === socket) {
-            return;
-          }
+        const parsedData = JSON.parse(data);
 
-          peerChannel.send(data);
+        channels.forEach((peerChannel) => {
+          peerChannel.send(
+            JSON.stringify({
+              clientId,
+              ...parsedData,
+            }),
+          );
         });
       });
     },
