@@ -1,0 +1,31 @@
+{
+  "name": "@rnd/shared",
+  "version": "1.0.0",
+  "description": "Experimental WebRTC shared functions",
+  "module": "dist/index.js",
+  "main": "dist/index.js",
+  "files": [
+    "dist"
+  ],
+  "type": "module",
+  "scripts": {
+    "build": "tsc --build",
+    "watch": "tsc --build --watch --preserveWatchOutput",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mysterycommand/roundtable.git"
+  },
+  "keywords": [
+    "experimental",
+    "webrtc",
+    "shared"
+  ],
+  "author": "Matt Hayes <matt@mysterycommand.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/mysterycommand/roundtable/issues"
+  },
+  "homepage": "https://github.com/mysterycommand/roundtable#readme"
+}
