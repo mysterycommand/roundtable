@@ -1,5 +1,3 @@
-import wrtc from 'wrtc';
-
 const defaultConfiguration: RTCConfiguration = {
   iceServers: [
     {
@@ -12,9 +10,15 @@ const defaultConfiguration: RTCConfiguration = {
 };
 
 export const createPeerConnection = (
+  Ctor: typeof RTCPeerConnection,
   configuration?: RTCConfiguration,
 ): RTCPeerConnection =>
-  new wrtc.RTCPeerConnection({
+  new Ctor({
     ...defaultConfiguration,
     ...configuration,
   });
+
+// const factory = <T, U extends { new (...args: any[]): T }>(
+//   Ctor: U,
+//   args: ConstructorParameters<U>,
+// ): T => new Ctor(...args);

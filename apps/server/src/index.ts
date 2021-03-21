@@ -2,8 +2,8 @@ import { createServer } from 'http';
 
 import evt from 'evt';
 import { v4 as uuid } from 'uuid';
+import wrtc from 'wrtc';
 import WebSocket from 'ws';
-
 /**
  * need the `*.js` extension here
  * @see https://github.com/nodejs/node/issues/32103#issuecomment-595806356
@@ -12,6 +12,7 @@ import { createPeerConnection } from './lib/createPeerConnection.js';
 import { createSocketServer } from './lib/createSocketServer.js';
 
 const { Evt } = evt;
+const { RTCPeerConnection } = wrtc;
 
 const server = createServer();
 const socketServer = createSocketServer({ server });
@@ -20,7 +21,7 @@ const channels: Map<WebSocket, RTCDataChannel> = new Map();
 Evt.from<WebSocket>(socketServer, 'connection').attach((socket) => {
   const clientId = uuid();
   const hue = Math.floor(Math.random() * 360);
-  const connection = createPeerConnection();
+  const connection = createPeerConnection(RTCPeerConnection);
 
   Evt.from<RTCDataChannelEvent>(connection, 'datachannel').attach(
     ({ channel }) => {
