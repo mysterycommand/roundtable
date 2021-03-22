@@ -18,6 +18,7 @@
     "dev:start-server": "nodemon apps/server/dist/index.js",
     "dev:serve-client": "lerna run dev --scope @rnd/client --stream",
     "dev": "concurrently \"npm:dev:*\"",
+    "build": "lerna run build --stream",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
