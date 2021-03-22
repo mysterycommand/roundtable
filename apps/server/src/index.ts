@@ -1,6 +1,6 @@
 import { createServer } from 'http';
 
-import evt from 'evt';
+import { Evt } from 'evt';
 import { v4 as uuid } from 'uuid';
 import wrtc from 'wrtc';
 import WebSocket from 'ws';
@@ -11,7 +11,6 @@ import WebSocket from 'ws';
 import { createPeerConnection } from './lib/createPeerConnection.js';
 import { createSocketServer } from './lib/createSocketServer.js';
 
-const { Evt } = evt;
 const { RTCPeerConnection } = wrtc;
 
 const server = createServer();
