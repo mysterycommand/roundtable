@@ -15,7 +15,7 @@
   "scripts": {
     "postinstall": "lerna bootstrap",
     "dev:build-server": "lerna run watch --scope @rnd/server --stream",
-    "dev:start-server": "nodemon apps/server/dist/index.js",
+    "dev:start-server": "nodemon apps/server/dist/app.js",
     "dev:serve-client": "lerna run dev --scope @rnd/client --stream",
     "dev": "concurrently \"npm:dev:*\"",
     "build": "lerna run build --stream",
@@ -48,7 +48,7 @@
     "lint-staged": "10.5.4",
     "nodemon": "2.0.7",
     "prettier": "2.2.1",
-    "snowpack": "3.0.13",
+    "snowpack": "3.1.2",
     "typescript": "4.2.2"
   },
   "husky": {
@@ -91,7 +91,19 @@
     },
     "rules": {
       "@typescript-eslint/ban-ts-comment": "off"
-    }
+    },
+    "overrides": [
+      {
+        "files": [
+          "snowpack.config.cjs"
+        ],
+        "rules": {
+          "@typescript-eslint/no-var-requires": "off"
+        }
+      }
+    ]
   },
-  "eslintIgnore": []
+  "eslintIgnore": [
+    "dist"
+  ]
 }
