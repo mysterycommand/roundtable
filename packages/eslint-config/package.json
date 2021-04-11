@@ -1,0 +1,41 @@
+{
+  "name": "@rnd/eslint-config",
+  "version": "1.0.0",
+  "description": "A shareable ESLint config for Roundtable",
+  "scripts": {
+    "build": "tsc --build",
+    "watch": "tsc --build --watch --preserveWatchOutput",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mysterycommand/roundtable.git"
+  },
+  "keywords": [
+    "shareable",
+    "eslint",
+    "config",
+    "roundtable"
+  ],
+  "author": "Matt Hayes <matt@mysterycommand.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/mysterycommand/roundtable/issues"
+  },
+  "homepage": "https://github.com/mysterycommand/roundtable#readme",
+  "dependencies": {
+    "@typescript-eslint/eslint-plugin": "4.21.0",
+    "@typescript-eslint/parser": "4.21.0",
+    "eslint-config-prettier": "8.1.0",
+    "eslint-plugin-prettier": "3.3.1"
+  },
+  "peerDependencies": {
+    "eslint": "^7.24.0"
+  },
+  "eslintConfig": {
+    "extends": "@rnd",
+    "env": {
+      "node": true
+    }
+  }
+}
