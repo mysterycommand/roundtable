@@ -2,11 +2,7 @@
   "name": "@rnd/eslint-config",
   "version": "1.0.0",
   "description": "A shareable ESLint config for Roundtable",
-  "scripts": {
-    "build": "tsc --build",
-    "watch": "tsc --build --watch --preserveWatchOutput",
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
+  "scripts": {},
   "repository": {
     "type": "git",
     "url": "git+https://github.com/mysterycommand/roundtable.git"
