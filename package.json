@@ -58,8 +58,8 @@
     "typescript": "4.2.4"
   },
   "lint-staged": {
-    "*": "prettier --write",
-    "*.{js,ts,tsx}": "eslint --fix --max-warnings 0"
+    ".": "prettier --write",
+    ".": "eslint --fix --max-warnings 0"
   },
   "config": {
     "commitizen": {
@@ -89,6 +89,7 @@
     "extends": "@rnd"
   },
   "eslintIgnore": [
-    "dist"
+    "dist",
+    "exclude"
   ]
 }

@@ -13,6 +13,9 @@ module.exports = {
   overrides: [
     {
       files: ['snowpack.config.cjs'],
+      env: {
+        node: true,
+      },
       rules: {
         '@typescript-eslint/no-var-requires': 'off',
       },

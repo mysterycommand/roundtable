@@ -27,5 +27,8 @@
   "dependencies": {
     "evt": "1.9.12",
     "immer": "8.0.1"
+  },
+  "eslintConfig": {
+    "extends": "@rnd"
   }
 }
