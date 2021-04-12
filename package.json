@@ -16,7 +16,7 @@
     "prepare": "husky install",
     "postinstall": "lerna bootstrap",
     "dev:build-server": "lerna run watch --scope @rnd/server --stream",
-    "dev:start-server": "nodemon apps/server/dist/app.js",
+    "dev:start-server": "nodemon apps/server/dist/index.js",
     "dev:serve-client": "lerna run dev --scope @rnd/client --stream",
     "dev": "concurrently \"npm:dev:*\"",
     "build": "lerna run build --stream",
