@@ -34,6 +34,7 @@ const { hostname, protocol } = location;
 const socketProtocol = protocol === 'https:' ? 'wss' : 'ws';
 const socketPort = protocol === 'https:' ? '' : ':8080';
 const socket = ws(`${socketProtocol}://${hostname}${socketPort}`);
+
 const connection = rtcp();
 const channel = connection.createDataChannel('@rnd/state');
 
