@@ -1,7 +1,12 @@
 import evt from 'evt';
-import { produce } from 'immer';
+import { applyPatches, enablePatches, produce, Patch } from 'immer';
 
 import { el, isReady, rtcp, ws } from './lib/helpers.js';
+
+/**
+ * @see https://immerjs.github.io/immer/patches
+ */
+enablePatches();
 
 /**
  * @see https://github.com/microsoft/TypeScript-DOM-lib-generator/pull/966
@@ -63,19 +68,23 @@ Evt.merge([
   Evt.from<MessageEvent<string>>(channel, 'message'),
 ]).attach((event) => {
   if (isMessageEvent(event) && event.data) {
-    console.log('event.data', event.data);
+    console.log('event.data', JSON.parse(event.data));
     return;
   }
 
   console.log('event.type', event.type);
+  console.log('channel.binaryType', channel.binaryType);
   console.log('channel.bufferedAmount', channel.bufferedAmount);
+  console.log(
+    'channel.bufferedAmountLowThreshold',
+    channel.bufferedAmountLowThreshold,
+  );
   console.log('channel.id', channel.id);
   console.log('channel.label', channel.label);
   console.log('channel.maxPacketLifeTime', channel.maxPacketLifeTime);
   console.log('channel.maxRetransmits', channel.maxRetransmits);
   console.log('channel.negotiated', channel.negotiated);
   console.log('channel.ordered', channel.ordered);
-  console.log('channel.priority', channel.priority);
   console.log('channel.protocol', channel.protocol);
   console.log('channel.readyState', channel.readyState);
 });
@@ -174,6 +183,19 @@ interface ClientData {
   y: number;
 }
 
+interface ClientPatch extends Patch {
+  path: [keyof ClientData];
+  value:
+    | ClientData['clientId']
+    | ClientData['hue']
+    | ClientData['type']
+    | ClientData['pointerId']
+    | ClientData['pointerType']
+    | ClientData['pressure']
+    | ClientData['x']
+    | ClientData['y'];
+}
+
 interface Dictionary<T> {
   [id: string]: T;
 }
@@ -189,11 +211,14 @@ let state: EntityState<ClientData> = {
 };
 
 Evt.from<MessageEvent<string>>(channel, 'message').attach(({ data }) => {
-  const parsedData: ClientData = JSON.parse(data);
-  state = produce(state, (draft) => {
-    draft.entities[parsedData.clientId] = parsedData;
-    draft.ids = Object.keys(draft.entities);
-  });
+  // const parsedData: ClientData = JSON.parse(data);
+  // state = produce(state, (draft) => {
+  //   draft.entities[parsedData.clientId] = parsedData;
+  //   draft.ids = Object.keys(draft.entities);
+  // });
+
+  const parsedData: ClientPatch[] = JSON.parse(data);
+  state = applyPatches(state, parsedData);
 });
 
 /**
@@ -216,8 +241,8 @@ frameEvt.attach(frameCtx, (t) => {
 
     context.beginPath();
 
-    const p = 10 * pressure;
-    const r = (p * 2 + Math.sin(t / 400) * p) * dpr;
+    const p = 100 * pressure;
+    const r = p; // (p * 2 + Math.sin(t / 400) * p) * dpr;
     context.ellipse(x * dpr, y * dpr, r, r, 0, 0, Math.PI * 2);
 
     context.fill();
