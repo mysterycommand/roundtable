@@ -1,7 +1,7 @@
 import { createServer } from 'http';
 
 import { Evt } from 'evt';
-import { applyPatches, enablePatches, Patch, produceWithPatches } from 'immer';
+import { applyPatches, enablePatches, produceWithPatches } from 'immer';
 import { v4 as uuid } from 'uuid';
 import wrtc from 'wrtc';
 import WebSocket from 'ws';
@@ -23,10 +23,7 @@ const server = createServer();
 const socketServer = createSocketServer({ server });
 const channels: Map<WebSocket, RTCDataChannel> = new Map();
 
-interface ClientData {
-  clientId: string;
-  hue: number;
-  type: string;
+interface PointerData {
   pointerId: number;
   pointerType: 'mouse' | 'pen' | 'touch';
   pressure: number;
@@ -34,12 +31,18 @@ interface ClientData {
   y: number;
 }
 
+interface ClientData {
+  clientId: string;
+  hue: number;
+  pointers: EntityState<PointerData>;
+}
+
 interface Dictionary<T> {
   [id: string]: T;
 }
 
 interface EntityState<T> {
-  ids: string[];
+  ids: (string | number)[];
   entities: Dictionary<T>;
 }
 let state: EntityState<ClientData> = {
@@ -66,20 +69,33 @@ Evt.from<WebSocket>(socketServer, 'connection').attach((socket) => {
       });
 
       Evt.from<MessageEvent<string>>(channel, 'message').attach(({ data }) => {
-        const parsedData = JSON.parse(data);
+        const parsedData: PointerData = JSON.parse(data);
 
         channels.forEach((clientChannel /* , clientSocket */) => {
           const [, patches] = produceWithPatches(state, (draft) => {
             draft.entities[clientId] = {
               clientId,
               hue,
-              ...parsedData,
+              pointers: {
+                ...draft.entities[clientId]?.pointers,
+                entities: {
+                  ...draft.entities[clientId]?.pointers?.entities,
+                  [parsedData.pointerId]: parsedData,
+                },
+                ids: [
+                  ...new Set(
+                    draft.entities[clientId]?.pointers?.ids?.concat(
+                      parsedData.pointerId,
+                    ) ?? [parsedData.pointerId],
+                  ),
+                ],
+              },
             };
             draft.ids = [...new Set(draft.ids.concat(clientId))];
           });
 
           state = applyPatches(state, patches);
-          console.log(`\n\n${JSON.stringify(state, null, 2)}`);
+          // console.log(`\n\n${JSON.stringify(state, null, 2)}`);
           clientChannel.send(JSON.stringify(patches));
         });
       });

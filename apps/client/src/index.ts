@@ -158,24 +158,16 @@ const moveCtx = Evt.newCtx();
 const moveEvt = Evt.from<PointerEvent>(canvas, 'pointermove');
 
 Evt.from<PointerEvent>(canvas, 'pointerdown').attach(() => {
-  moveEvt.attach(
-    moveCtx,
-    ({ type, pointerId, pointerType, pressure, x, y }) => {
-      channel.send(
-        JSON.stringify({ type, pointerId, pointerType, pressure, x, y }),
-      );
-    },
-  );
+  moveEvt.attach(moveCtx, ({ pointerId, pointerType, pressure, x, y }) => {
+    channel.send(JSON.stringify({ pointerId, pointerType, pressure, x, y }));
+  });
 });
 
 Evt.from<PointerEvent>(canvas, 'pointerup').attach(() => {
   moveCtx.done();
 });
 
-interface ClientData {
-  clientId: string;
-  hue: number;
-  type: string;
+interface PointerData {
   pointerId: number;
   pointerType: 'mouse' | 'pen' | 'touch';
   pressure: number;
@@ -183,17 +175,15 @@ interface ClientData {
   y: number;
 }
 
+interface ClientData {
+  clientId: string;
+  hue: number;
+  pointers: EntityState<PointerData>;
+}
+
 interface ClientPatch extends Patch {
   path: [keyof ClientData];
-  value:
-    | ClientData['clientId']
-    | ClientData['hue']
-    | ClientData['type']
-    | ClientData['pointerId']
-    | ClientData['pointerType']
-    | ClientData['pressure']
-    | ClientData['x']
-    | ClientData['y'];
+  value: ClientData['clientId'] | ClientData['hue'] | ClientData['pointers'];
 }
 
 interface Dictionary<T> {
@@ -201,7 +191,7 @@ interface Dictionary<T> {
 }
 
 interface EntityState<T> {
-  ids: string[];
+  ids: (string | number)[];
   entities: Dictionary<T>;
 }
 
@@ -230,15 +220,17 @@ raf(frame);
 frameEvt.attach(frameCtx, (t) => {
   context.clearRect(0, 0, canvas.width, canvas.height);
 
-  Object.values(state.entities).forEach(({ hue, x, y, pressure }) => {
-    context.fillStyle = `hsl(${hue}, 80%, 50%)`;
+  Object.values(state.entities).forEach(({ hue, pointers }) =>
+    Object.values(pointers.entities).forEach(({ x, y, pressure }) => {
+      context.fillStyle = `hsl(${hue}, 80%, 50%)`;
 
-    context.beginPath();
+      context.beginPath();
 
-    const p = 100 * pressure;
-    const r = p; // (p * 2 + Math.sin(t / 400) * p) * dpr;
-    context.ellipse(x * dpr, y * dpr, r, r, 0, 0, Math.PI * 2);
+      const p = 100 * pressure;
+      const r = p; // (p * 2 + Math.sin(t / 400) * p) * dpr;
+      context.ellipse(x * dpr, y * dpr, r, r, 0, 0, Math.PI * 2);
 
-    context.fill();
-  });
+      context.fill();
+    }),
+  );
 });
