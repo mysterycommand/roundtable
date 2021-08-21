@@ -1,5 +1,5 @@
 import evt from 'evt';
-import { applyPatches, enablePatches, produce, Patch } from 'immer';
+import { applyPatches, enablePatches, Patch } from 'immer';
 
 import { el, isReady, rtcp, ws } from './lib/helpers.js';
 
@@ -211,12 +211,6 @@ let state: EntityState<ClientData> = {
 };
 
 Evt.from<MessageEvent<string>>(channel, 'message').attach(({ data }) => {
-  // const parsedData: ClientData = JSON.parse(data);
-  // state = produce(state, (draft) => {
-  //   draft.entities[parsedData.clientId] = parsedData;
-  //   draft.ids = Object.keys(draft.entities);
-  // });
-
   const parsedData: ClientPatch[] = JSON.parse(data);
   state = applyPatches(state, parsedData);
 });

@@ -1,6 +1,7 @@
 import { createServer } from 'http';
 
 import { Evt } from 'evt';
+import { applyPatches, enablePatches, Patch, produceWithPatches } from 'immer';
 import { v4 as uuid } from 'uuid';
 import wrtc from 'wrtc';
 import WebSocket from 'ws';
@@ -11,11 +12,40 @@ import WebSocket from 'ws';
 import { createPeerConnection } from './lib/createPeerConnection.js';
 import { createSocketServer } from './lib/createSocketServer.js';
 
+/**
+ * @see https://immerjs.github.io/immer/patches
+ */
+enablePatches();
+
 const { RTCPeerConnection } = wrtc;
 
 const server = createServer();
 const socketServer = createSocketServer({ server });
 const channels: Map<WebSocket, RTCDataChannel> = new Map();
+
+interface ClientData {
+  clientId: string;
+  hue: number;
+  type: string;
+  pointerId: number;
+  pointerType: 'mouse' | 'pen' | 'touch';
+  pressure: number;
+  x: number;
+  y: number;
+}
+
+interface Dictionary<T> {
+  [id: string]: T;
+}
+
+interface EntityState<T> {
+  ids: string[];
+  entities: Dictionary<T>;
+}
+let state: EntityState<ClientData> = {
+  ids: [],
+  entities: {},
+};
 
 Evt.from<WebSocket>(socketServer, 'connection').attach((socket) => {
   const clientId = uuid();
@@ -39,18 +69,18 @@ Evt.from<WebSocket>(socketServer, 'connection').attach((socket) => {
         const parsedData = JSON.parse(data);
 
         channels.forEach((clientChannel /* , clientSocket */) => {
-          // // only broadcast to "other" clients
-          // if (clientSocket === socket) {
-          //   return;
-          // }
-
-          clientChannel.send(
-            JSON.stringify({
+          const [, patches] = produceWithPatches(state, (draft) => {
+            draft.entities[clientId] = {
               clientId,
               hue,
               ...parsedData,
-            }),
-          );
+            };
+            draft.ids = [...new Set(draft.ids.concat(clientId))];
+          });
+
+          state = applyPatches(state, patches);
+          console.log(`\n\n${JSON.stringify(state, null, 2)}`);
+          clientChannel.send(JSON.stringify(patches));
         });
       });
     },
