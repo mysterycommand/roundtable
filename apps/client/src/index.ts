@@ -157,17 +157,30 @@ window.dispatchEvent(new Event('resize'));
 const moveCtx = Evt.newCtx();
 const moveEvt = Evt.from<PointerEvent>(canvas, 'pointermove');
 
-Evt.from<PointerEvent>(canvas, 'pointerdown').attach(() => {
-  moveEvt.attach(moveCtx, ({ pointerId, pointerType, pressure, x, y }) => {
-    channel.send(JSON.stringify({ pointerId, pointerType, pressure, x, y }));
-  });
+const sendPointer = ({
+  type,
+  pointerId,
+  pointerType,
+  pressure,
+  x,
+  y,
+}: PointerEvent): void =>
+  channel.send(
+    JSON.stringify({ type, pointerId, pointerType, pressure, x, y }),
+  );
+
+Evt.from<PointerEvent>(canvas, 'pointerdown').attach((event) => {
+  sendPointer(event);
+  moveEvt.attach(moveCtx, sendPointer);
 });
 
-Evt.from<PointerEvent>(canvas, 'pointerup').attach(() => {
+Evt.from<PointerEvent>(canvas, 'pointerup').attach((event) => {
+  sendPointer(event);
   moveCtx.done();
 });
 
 interface PointerData {
+  type: 'pointerdown' | 'pointermove' | 'pointerup';
   pointerId: number;
   pointerType: 'mouse' | 'pen' | 'touch';
   pressure: number;
@@ -217,7 +230,7 @@ const frame = (t: DOMHighResTimeStamp) => {
 };
 raf(frame);
 
-frameEvt.attach(frameCtx, (t) => {
+frameEvt.attach(frameCtx, (/* t */) => {
   context.clearRect(0, 0, canvas.width, canvas.height);
 
   Object.values(state.entities).forEach(({ hue, pointers }) =>

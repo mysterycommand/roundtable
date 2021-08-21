@@ -24,6 +24,7 @@ const socketServer = createSocketServer({ server });
 const channels: Map<WebSocket, RTCDataChannel> = new Map();
 
 interface PointerData {
+  type: 'pointerdown' | 'pointermove' | 'pointerup';
   pointerId: number;
   pointerType: 'mouse' | 'pen' | 'touch';
   pressure: number;
@@ -70,33 +71,55 @@ Evt.from<WebSocket>(socketServer, 'connection').attach((socket) => {
 
       Evt.from<MessageEvent<string>>(channel, 'message').attach(({ data }) => {
         const parsedData: PointerData = JSON.parse(data);
+        const [, patches] = produceWithPatches(state, (draft) => {
+          switch (parsedData.type) {
+            case 'pointerdown':
+              break;
+            case 'pointermove':
+              draft.entities[clientId] = {
+                clientId,
+                hue,
+                pointers: {
+                  ...draft.entities[clientId]?.pointers,
+                  entities: {
+                    ...draft.entities[clientId]?.pointers?.entities,
+                    [parsedData.pointerId]: parsedData,
+                  },
+                  ids: [
+                    ...new Set(
+                      draft.entities[clientId]?.pointers?.ids?.concat(
+                        parsedData.pointerId,
+                      ) ?? [parsedData.pointerId],
+                    ),
+                  ],
+                },
+              };
+              draft.ids = [...new Set(draft.ids.concat(clientId))];
+              break;
+            case 'pointerup':
+              delete draft.entities[clientId].pointers.entities[
+                parsedData.pointerId
+              ];
+
+              draft.entities[clientId].pointers.ids.splice(
+                draft.entities[clientId].pointers.ids.indexOf(
+                  parsedData.pointerId,
+                ),
+                1,
+              );
+              break;
+          }
+        });
+
+        const [, minifiedPatches] = produceWithPatches(state, (draft) => {
+          applyPatches(draft, patches);
+        });
+
+        state = applyPatches(state, minifiedPatches);
 
         channels.forEach((clientChannel /* , clientSocket */) => {
-          const [, patches] = produceWithPatches(state, (draft) => {
-            draft.entities[clientId] = {
-              clientId,
-              hue,
-              pointers: {
-                ...draft.entities[clientId]?.pointers,
-                entities: {
-                  ...draft.entities[clientId]?.pointers?.entities,
-                  [parsedData.pointerId]: parsedData,
-                },
-                ids: [
-                  ...new Set(
-                    draft.entities[clientId]?.pointers?.ids?.concat(
-                      parsedData.pointerId,
-                    ) ?? [parsedData.pointerId],
-                  ),
-                ],
-              },
-            };
-            draft.ids = [...new Set(draft.ids.concat(clientId))];
-          });
-
-          state = applyPatches(state, patches);
           // console.log(`\n\n${JSON.stringify(state, null, 2)}`);
-          clientChannel.send(JSON.stringify(patches));
+          clientChannel.send(JSON.stringify(minifiedPatches));
         });
       });
     },
