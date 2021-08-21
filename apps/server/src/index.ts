@@ -24,7 +24,15 @@ const socketServer = createSocketServer({ server });
 const channels: Map<WebSocket, RTCDataChannel> = new Map();
 
 interface PointerData {
-  type: 'pointerdown' | 'pointermove' | 'pointerup';
+  type:
+    | 'pointerover'
+    | 'pointerenter'
+    | 'pointerdown'
+    | 'pointermove'
+    | 'pointerup'
+    | 'pointercancel'
+    | 'pointerout'
+    | 'pointerleave';
   pointerId: number;
   pointerType: 'mouse' | 'pen' | 'touch';
   pressure: number;
@@ -97,6 +105,7 @@ Evt.from<WebSocket>(socketServer, 'connection').attach((socket) => {
               draft.ids = [...new Set(draft.ids.concat(clientId))];
               break;
             case 'pointerup':
+            case 'pointercancel':
               delete draft.entities[clientId].pointers.entities[
                 parsedData.pointerId
               ];

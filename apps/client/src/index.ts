@@ -154,8 +154,12 @@ window.dispatchEvent(new Event('resize'));
 /**
  * Pointer Events
  */
-const moveCtx = Evt.newCtx();
+const downEvt = Evt.from<PointerEvent>(canvas, 'pointerdown');
 const moveEvt = Evt.from<PointerEvent>(canvas, 'pointermove');
+const doneEvt = Evt.merge([
+  Evt.from<PointerEvent>(canvas, 'pointerup'),
+  Evt.from<PointerEvent>(canvas, 'pointercancel'),
+]);
 
 const sendPointer = ({
   type,
@@ -169,18 +173,28 @@ const sendPointer = ({
     JSON.stringify({ type, pointerId, pointerType, pressure, x, y }),
   );
 
-Evt.from<PointerEvent>(canvas, 'pointerdown').attach((event) => {
+downEvt.attach((event) => {
   sendPointer(event);
-  moveEvt.attach(moveCtx, sendPointer);
-});
 
-Evt.from<PointerEvent>(canvas, 'pointerup').attach((event) => {
-  sendPointer(event);
-  moveCtx.done();
+  const moveCtx = Evt.newCtx();
+  moveEvt.attach(moveCtx, sendPointer);
+
+  doneEvt.attach((event) => {
+    sendPointer(event);
+    moveCtx.done();
+  });
 });
 
 interface PointerData {
-  type: 'pointerdown' | 'pointermove' | 'pointerup';
+  type:
+    | 'pointerover'
+    | 'pointerenter'
+    | 'pointerdown'
+    | 'pointermove'
+    | 'pointerup'
+    | 'pointercancel'
+    | 'pointerout'
+    | 'pointerleave';
   pointerId: number;
   pointerType: 'mouse' | 'pen' | 'touch';
   pressure: number;
